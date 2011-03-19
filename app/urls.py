@@ -18,4 +18,5 @@ rules = [
 	Rule('/auth/yahoo/', endpoint='auth/yahoo', handler='auth.handlers.YahooAuthHandler'),
 
 	Rule('/content', endpoint='content/index', handler='auth.handlers.ContentHandler'),
+	Rule('/r/<hash>', endpoint='redirect', handler='redirector.handlers.MainHandler'),
 ]
