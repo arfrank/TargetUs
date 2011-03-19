@@ -1,0 +1,13 @@
+werkzeug>=0.6.1
+setuptools
+pip
+
+[i18n]
+babel
+gaepytz
+
+[jinja2]
+jinja2>=2.5.1
+
+[wtforms]
+wtforms

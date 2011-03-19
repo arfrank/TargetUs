@@ -1,0 +1,4 @@
+[console_scripts]
+tipfy = tipfy.scripts.manage:main
+jinja2_compile = tipfyext.jinja2.scripts:compile_templates
+

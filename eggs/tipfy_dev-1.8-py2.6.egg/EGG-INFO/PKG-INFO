@@ -1,0 +1,51 @@
+Metadata-Version: 1.0
+Name: tipfy-dev
+Version: 1.8
+Summary: The almighty little framework for Google App Engine
+Home-page: http://www.tipfy.org/
+Author: Rodrigo Moraes
+Author-email: rodrigo.moraes@gmail.com
+License: BSD
+Download-URL: http://www.tipfy.org/tipfy.tar.gz
+Description: 
+        Tipfy
+        =====
+        This is a tipfy experimental branch, which will be released as tipfy 0.7
+        in the future.
+        
+        Tipfy is a small but powerful framework made specifically for
+        `Google App Engine <http://code.google.com/appengine/>`_. It is a lot like
+        `webapp <http://code.google.com/appengine/docs/python/tools/webapp/>`_::
+        
+        from tipfy import RequestHandler, Response
+        
+        class HelloWorldHandler(RequestHandler):
+        def get(self):
+        return Response('Hello, World!')
+        
+        
+        ...but offers a bunch of features and goodies that webapp misses: i18n,
+        sessions, own authentication, flash messages and more. Everything in a modular,
+        lightweight way, tuned for App Engine. You use only what you need, when you
+        need.
+        
+        
+        Links
+        -----
+        * `Tipfy's website <http://www.tipfy.org/>`_
+        * `Installation instructions <http://www.tipfy.org/wiki/guide/installation/>`_
+        * `Extensions <http://www.tipfy.org/wiki/extensions/>`_
+        * `Wiki <http://www.tipfy.org/wiki/>`_
+        * `Discussion Group <http://groups.google.com/group/tipfy>`_
+        * `Issue Tracker <http://code.google.com/p/tipfy/issues/list>`_
+        * `Source Code Repository <http://code.google.com/p/tipfy/>`_
+        
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

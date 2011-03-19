@@ -8,6 +8,10 @@ if 'lib' not in sys.path:
     # and optionally to lib/dist.zip, loaded using zipimport.
     sys.path[0:0] = ['lib', 'lib/dist', 'lib/dist.zip']
 
+cd = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.join(cd, 'lib', 'dist'))
+sys.path.append(os.path.join(cd, 'lib'))
+
 from tipfy import Tipfy
 from config import config
 from urls import rules
@@ -41,6 +45,8 @@ enable_jinja2_debugging()
 
 def main():
     # Run the app.
+    sys.path.append(os.path.join(cd, 'lib', 'dist'))
+    sys.path.append(os.path.join(cd, 'lib'))
     app.run()
 
 
