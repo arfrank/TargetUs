@@ -23,5 +23,9 @@ handlers:
   script: main.py
   login: admin
 
+- url: /background/.*
+  script: main.py
+  login: admin
+
 - url: /.*
   script: main.py

@@ -8,7 +8,7 @@ config['tipfy'] = {
 }
 
 config['tipfy.sessions'] = {
-    'secret_key': 'XXXXXXXXXXXXXXX',
+    'secret_key': 'hasjdkfhakljsdfhiluhi2ufh32uhfb2h3f97p2bfyg23ifuyhkjg23hjf23gf2g3f8i2y3fkuj23gfhkj23gf',
 }
 
 config['tipfy.auth.facebook'] = {

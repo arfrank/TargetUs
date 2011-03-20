@@ -19,4 +19,5 @@ rules = [
 
 	Rule('/content', endpoint='content/index', handler='auth.handlers.ContentHandler'),
 	Rule('/r/<hash>', endpoint='redirect', handler='redirector.handlers.MainHandler'),
+	Rule('/background/statistics', endpoint='redirect', handler='statistics.handlers.MainHandler'),
 ]

@@ -1,4 +1,6 @@
-from model import base
+from tipfy.appengine import db as tipfydb
+from google.appengine.ext import db
+from model.base import BaseModel
 
-class Hashes(BaseModel):
-	pass
+class Hash(BaseModel):
+	location = db.TextProperty()
