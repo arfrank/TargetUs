@@ -1,13 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-        <title>Tipfy Auth Example</title>
+        <title>{% if section %}
+        	{{section}} - 
+        {% endif %}QRtar</title>
         <link rel="stylesheet" type="text/css" href="/static/styles/screen.css">
     </head>
     <body>
         <div class="yui-d1">
             <div class="top">
-                <h1>tipfy.ext.auth example</h1>
+                <h1>QRtar</h1>
                 <div class="user-status">
                     <p>{% if current_user or auth_session -%}
                         {% if current_user -%}
@@ -27,16 +29,11 @@
                         {% block body %}
                         {% endblock %}
                         </div>
-
-                        <div class="footer">
-                            <p>Powered by <a href="http://www.tipfy.org/">tipfy</a>. Source code is <a href="http://code.google.com/p/tipfy-ext-auth/source/browse/#hg/examples/multi-auth">here</a>. Icons by <a href="http://jwloh.deviantart.com/art/Aquaticus-Social-91014249">jwloh</a>.</p>
-                        </div>
                     </div>
                 </div>
                 <div class="yui-b">
                     <ul class="menu">
                         <li{% if section == 'home' %} class="active"{% endif %}><a href="{{ url_for('home') }}">Home</a></li>
-                        <li{% if section == 'content' %} class="active"{% endif %}><a href="{{ url_for('content/index') }}">Protected Content</a></li>
                     </ul>
                 </div>
             </div>

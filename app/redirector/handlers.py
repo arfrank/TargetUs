@@ -23,9 +23,22 @@ class MainHandler(RequestHandler):
 		www = self.request.host
 		return namespace, www
 
+	def check_cookie(self,response, cookie_name, host):
+		cookie = self.request.cookies.get(cookie_name)
+
+		unique = True
+		if cookie and 'visited' in cookie:
+			unique = False
+		else:
+			response.set_cookie(cookie_name,{'visited':True}, domain=host, max_age = 2629743)
+
+		return response, unique
+
+
 	def get(self, hash=None):
 		#GET THE CURRENT TIME!
 		now = time.time()
+		
 		#DETERMINE NAMESPACE AND THE ACTUAL HOST URL
 		namespace, host = self.get_namespace(self.request.headers)
 
@@ -49,21 +62,12 @@ class MainHandler(RequestHandler):
 			#redirector should set cookie
 			r = self.redirect('/')
 			
+			
+			#CHECK UNIQUENESS FROM COOKIES FOR STATISTICS
 			#CHECK COOKIES HASH
-			hash_cookie = self.request.cookies.get(hash)
-			hash_unique = True
-			if hash_cookie and 'visited' in hash_cookie:
-				hash_unique = False
-			else:
-				r.set_cookie(hash,{'visited':True}, domain=host, max_age = 2629743)
-
+			r, hash_unique  = self.check_cookie(r,hash,host)
 			#CHECK COOKIE NAMESPACE
-			namespace_cookie = self.request.cookies.get('namespace_global')
-			namespace_unique = True
-			if namespace_cookie and 'visited' in namespace_cookie:
-				namespace_unique = False
-			else:
-		 		r.set_cookie('namespace_global',{'visited':True}, domain=host, max_age = 2629743)
+			r, namespace_unique = self.check_cookie(r,'namespace_global',host)
 
 			#set a queue request to process in the background
 			#deferred.defer(self.processStatistics, t = 'farts')
@@ -71,7 +75,8 @@ class MainHandler(RequestHandler):
 					{
 						'Hash_unique':hash_unique,
 						'Namespace_unique':namespace_unique,
-						
+						'Namespace' : namespace,
+
 						'Device':device,
 						'Family':family,
 						'User-Agent':self.request.headers.get('User-Agent'),
@@ -80,13 +85,14 @@ class MainHandler(RequestHandler):
 						
 						'Hash': hash,
 						'Host': self.request.host,
-
-						''
 					}
 				)
 			)
+			
+			#create a redirect element
+			
+			
 			#and redirect the person, all very quickly
-
 			#return self.redirect(self.request.headers.get('Host'))
 			logging.info(r.headers)
 			return r

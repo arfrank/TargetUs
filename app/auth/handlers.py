@@ -3,10 +3,10 @@ from werkzeug import cached_property
 from tipfy import RequestHandler
 from tipfy.auth import (login_required, user_required,
     UserRequiredIfAuthenticatedMiddleware)
-from tipfy.auth.facebook import FacebookMixin
-from tipfy.auth.friendfeed import FriendFeedMixin
-from tipfy.auth.google import GoogleMixin
-from tipfy.auth.twitter import TwitterMixin
+#from tipfy.auth.facebook import FacebookMixin
+#from tipfy.auth.friendfeed import FriendFeedMixin
+#from tipfy.auth.google import GoogleMixin
+#from tipfy.auth.twitter import TwitterMixin
 from tipfy.sessions import SessionMiddleware
 from tipfy.utils import json_encode
 
@@ -14,7 +14,7 @@ from tipfyext.jinja2 import Jinja2Mixin
 from tipfyext import wtforms
 from tipfyext.wtforms import Form, fields, validators
 
-from handlers import BaseHandler
+from base_handlers import BaseHandler
 
 # ----- Forms -----
 
@@ -60,11 +60,11 @@ class LoginHandler(BaseHandler):
         opts = {'continue': self.redirect_path()}
         context = {
             'form':                 self.form,
-            'facebook_login_url':   self.url_for('auth/facebook', **opts),
-            'friendfeed_login_url': self.url_for('auth/friendfeed', **opts),
-            'google_login_url':     self.url_for('auth/google', **opts),
-            'twitter_login_url':    self.url_for('auth/twitter', **opts),
-            'yahoo_login_url':      self.url_for('auth/yahoo', **opts),
+            #'facebook_login_url':   self.url_for('auth/facebook', **opts),
+            #'friendfeed_login_url': self.url_for('auth/friendfeed', **opts),
+            #'google_login_url':     self.url_for('auth/google', **opts),
+            #'twitter_login_url':    self.url_for('auth/twitter', **opts),
+            #'yahoo_login_url':      self.url_for('auth/yahoo', **opts),
         }
         return self.render_response('auth/login.html', **context)
 

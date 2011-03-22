@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>Register</h1>
-    <p>Fill the form to create a new account, or <a href="{{ url_for('auth/login') }}">sign in with your existing one</a>.</p>
+    <p>Fill the form to create a new account{#, or <a href="{{ url_for('auth/login') }}">sign in with your existing one</a>#}.</p>
     <form method="post" action="{{ current_url }}" enctype="multipart/form-data" class="tipfy-form">
         <ol>
             <li>{{ form_field(form.username, class='medium') }}</li>

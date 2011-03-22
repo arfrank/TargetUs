@@ -3,10 +3,10 @@ from werkzeug import cached_property
 from tipfy import RequestHandler
 from tipfy.auth import (login_required, user_required,
     UserRequiredIfAuthenticatedMiddleware)
-from tipfy.auth.facebook import FacebookMixin
-from tipfy.auth.friendfeed import FriendFeedMixin
-from tipfy.auth.google import GoogleMixin
-from tipfy.auth.twitter import TwitterMixin
+#from tipfy.auth.facebook import FacebookMixin
+#from tipfy.auth.friendfeed import FriendFeedMixin
+#from tipfy.auth.google import GoogleMixin
+#from tipfy.auth.twitter import TwitterMixin
 from tipfy.sessions import SessionMiddleware
 from tipfy.utils import json_encode
 
