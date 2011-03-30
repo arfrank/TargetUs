@@ -2,6 +2,9 @@
 """App configuration."""
 config = {}
 
+config['site'] = {
+'appspot_id':'qrtar'
+}
 # Configurations for the 'tipfy' module.
 config['tipfy'] = {
     'auth_store_class': 'tipfy.auth.MultiAuthStore',

@@ -1,10 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
+	  <meta charset="utf-8">
+
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>{% if section %}
         	{{section}} - 
         {% endif %}QRtar</title>
         <link rel="stylesheet" type="text/css" href="/static/styles/screen.css">
+		
     </head>
     <body>
         <div class="yui-d1">
@@ -38,10 +42,13 @@
                 </div>
             </div>
         </div>
+	  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
+	  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+	  <script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.5.1.js"%3E%3C/script%3E'))</script>
 
         {%- block body_extra %}
             <script src="/static/scripts/scripts.js"></script>
-
+			<script src="/static/scripts/custom.js?id=23"></script>
             {%- block messages -%}
                 <script>
                 tipfy.instances = {};
