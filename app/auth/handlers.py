@@ -18,6 +18,8 @@ from tipfyext.wtforms import Form, fields, validators
 
 from base_handlers import BaseHandler
 
+from model import  namespaces
+
 # ----- Forms -----
 
 REQUIRED = validators.required()
@@ -31,12 +33,19 @@ class LoginForm(Form):
 class SignupForm(Form):
 	nickname = fields.TextField('Nickname', validators=[REQUIRED])
 
-
+def unique_namespace(form, field):
+	reserved = ['www','demo','email','admin']
+	if field.data.lower() in reserved:
+		raise wtforms.ValidationError('That namespace is reserved.')
+	nm = namespaces.Namespace.all().filter('name =',field.data.lower()).get()
+	if nm:
+		raise wtforms.ValidationError('That namespace has already been claimed, please try another one.')
+		
 class RegistrationForm(Form):
-	username = fields.TextField('Username', validators=[REQUIRED])
+	username = fields.TextField('Email Address', validators=[REQUIRED, validators.email()])
 	password = fields.PasswordField('Password', validators=[REQUIRED])
 	password_confirm = fields.PasswordField('Confirm the password', validators=[REQUIRED])
-	namespace = fields.TextField('Namespace', validators=[REQUIRED])
+	namespace = fields.TextField('Namespace', validators=[REQUIRED, unique_namespace])
 
 
 
@@ -104,7 +113,7 @@ class LogoutHandler(BaseHandler):
 		self.auth.logout()
 		return self.redirect(self.redirect_path())
 
-
+"""
 class SignupHandler(BaseHandler):
 	@login_required
 	def get(self, **kwargs):
@@ -142,7 +151,7 @@ class SignupHandler(BaseHandler):
 	@cached_property
 	def form(self):
 		return SignupForm(self.request)
-
+"""
 
 class RegisterHandler(BaseHandler):
 	def get(self, **kwargs):

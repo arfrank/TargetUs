@@ -38,6 +38,8 @@
                 <div class="yui-b">
                     <ul class="menu">
                         <li{% if section == 'home' %} class="active"{% endif %}><a href="{{ url_for('home') }}">Home</a></li>
+                        <li{% if section == 'manage' %} class="active"{% endif %}><a href="{{ url_for('manage') }}">Manage</a></li>
+                        <li{% if section == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('statistics') }}">Statistics</a></li>
                     </ul>
                 </div>
             </div>
