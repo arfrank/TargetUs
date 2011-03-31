@@ -2,12 +2,14 @@
 
 {% block body %}
     <h1>Please enter your namespace to login</h1>
-    <p>
-    	<label>Namespace: <input type="text" id="namespace_login_value" name="namespace" value=""></label>
-    </p>
-	<p>
-		<button id="namespace_login">Login via your Namespace</button>
-	</p>
+	<form action="/redirector" method="" id="namespace_login" accept-charset="utf-8">
+    	<p>
+	    	<label>Namespace: <input type="text" id="namespace_login_value" name="namespace" value=""></label>
+	    </p>
+		<p>
+			<button id="">Login via your Namespace</button>
+		</p>
+	</form>
 	<p>
 		Not registered yet? <a href="{{url_for('auth/register')}}">Register Now!</a>
 	</p>

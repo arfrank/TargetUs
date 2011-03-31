@@ -24,7 +24,7 @@ class NamespaceMiddleware(object):
 		namespace_manager.set_namespace('www')
 		host = handler.request.headers.get('Host')
 		splits = host.lower().split('.')
-		if auth.session['namespace'] != splits[0]:
+		if auth.session and auth.session.get('namespace') != splits[0]:
 			namespace_manager.set_namespace(auth.session['namespace'])
 			if len(splits) > 1:
 				return handler.redirect(auth.session['namespace']+'.'.join(splits[1:]))
