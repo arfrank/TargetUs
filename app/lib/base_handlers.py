@@ -22,7 +22,10 @@ class NamespaceMiddleware(object):
 		namespace_manager.set_namespace('www')
 		host = handler.request.headers.get('Host')
 		splits = host.lower().split('.')
-		if len(splits) >= 3:
+		if 'appspot' in splits and len(splits)>=4:
+			logging.info('setting namespace to '+splits[0])
+			namesapce_manager.set_namespace(splits[0])
+		elif len(splits) >= 3:
 			logging.info('setting namespace to '+splits[0])
 			namesapce_manager.set_namespace(splits[0])
 # ----- Handlers -----

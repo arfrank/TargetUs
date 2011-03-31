@@ -34,7 +34,7 @@ class SignupForm(Form):
 	nickname = fields.TextField('Nickname', validators=[REQUIRED])
 
 def unique_namespace(form, field):
-	reserved = ['www','demo','email','admin']
+	reserved = ['www','demo','email','admin','appspot']
 	if field.data.lower() in reserved:
 		raise wtforms.ValidationError('That namespace is reserved.')
 	nm = namespaces.Namespace.all().filter('name =',field.data.lower()).get()

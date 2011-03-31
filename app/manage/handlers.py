@@ -7,3 +7,10 @@ class MainHandler(BaseHandler):
 	@user_required
 	def get(self, **kwargs):
 		return self.render_response('manage/home.html', section='Home')
+
+
+
+class InviteHandler(BaseHandler):
+	@user_required
+	def get(self, **kwargs):
+		pass
