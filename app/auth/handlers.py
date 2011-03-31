@@ -17,21 +17,18 @@ from tipfyext import wtforms
 from tipfyext.wtforms import Form, fields, validators
 
 from base_handlers import BaseHandler
+from google.appengine.api import namespace_manager
 
 from model import  namespaces
-
+import logging
 # ----- Forms -----
 
 REQUIRED = validators.required()
 
 class LoginForm(Form):
-	username = fields.TextField('Username', validators=[REQUIRED])
+	username = fields.TextField('Email Address', validators=[REQUIRED])
 	password = fields.PasswordField('Password', validators=[REQUIRED])
 	remember = fields.BooleanField('Keep me signed in')
-
-
-class SignupForm(Form):
-	nickname = fields.TextField('Nickname', validators=[REQUIRED])
 
 def unique_namespace(form, field):
 	reserved = ['www','demo','email','admin','appspot']
@@ -63,7 +60,9 @@ class LoginHandler(BaseHandler):
 	def get(self, **kwargs):
 		host = self.request.host.lower()
 		ns = host.split('.')[0]
-		if not ns == 'www' or ns == self.app.get_config('site','appspot_id'):
+		logging.info(ns)
+		
+		if ns == 'www' or ns == self.app.get_config('site','appspot_id'):
 			return self.render_response('auth/redirect.html')
 
  		redirect_url = self.redirect_path()
@@ -99,7 +98,6 @@ class LoginHandler(BaseHandler):
 			if res:
 				self.session.add_flash('Welcome back!', 'success', '_messages')
 				#this should be more robust, but good for now.
-				self.session['namespace'] = ns
 				return self.redirect(redirect_url)
 
 		self.messages.append(('Authentication failed. Please try again.',
@@ -124,8 +122,8 @@ class RegisterHandler(BaseHandler):
 			# User is already registered, so don't display the registration form.
 			return self.redirect(redirect_url)
 		
-		from google.appengine.api import namespace_manager
 		ns = namespace_manager.get_namespace()
+		logging.info(ns)
 		if ns != 'www':
 			return self.redirect(self.app.get_config('site','main_url')+'auth/register')
 
@@ -169,6 +167,7 @@ class RegisterHandler(BaseHandler):
 				self.session.add_flash('You are now registered. Welcome!',
 					'success', '_messages')
 				logging.info(redirect_url)
+				redirect_url = 'http://'+ns.name+'.target-us.appspot.com/manage'
 				return self.redirect(redirect_url)
 			else:
 				self.messages.append(('This nickname is already registered.',

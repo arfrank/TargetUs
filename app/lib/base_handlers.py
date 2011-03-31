@@ -23,11 +23,11 @@ class NamespaceMiddleware(object):
 		
 		namespace_manager.set_namespace('www')
 		logging.info('do we have a user?')
+		host = handler.request.headers.get('Host')
+		splits = host.lower().split('.')
 		if auth.session:
 			logging.info(auth.session)
 			logging.info('yes we have a session')
-			host = handler.request.headers.get('Host')
-			splits = host.lower().split('.')
 			if auth.session and auth.session.get('namespace') and auth.session.get('namespace') != splits[0]:
 				logging.info(auth.session.get('namespace'))
 				namespace_manager.set_namespace(auth.session.get('namespace'))
@@ -40,6 +40,22 @@ class NamespaceMiddleware(object):
 				elif len(splits) >= 3:
 					logging.info('setting namespace to '+splits[0])
 					namespace_manager.set_namespace(splits[0])
+		else:
+			logging.info('no session')
+			if 'appspot' in splits:
+				logging.info('hitting appspot domain directly')
+				if len(splits)>=4:
+					logging.info('setting namespace to '+splits[0])
+					namespace_manager.set_namespace(splits[0])
+				else:
+					namespace_manager.set_namespace('www')
+			else:
+				logging.info('not hitting appspot directly')
+				if len(splits) >= 3:
+					logging.info('have 3 subdomains splits')
+					logging.info('setting namespace to '+splits[0])
+					namespace_manager.set_namespace(splits[0])
+			
 # ----- Handlers -----
 class Base(RequestHandler, Jinja2Mixin):
 
@@ -59,6 +75,7 @@ class Base(RequestHandler, Jinja2Mixin):
             'login_url':    self.auth.login_url(),
             'logout_url':   self.auth.logout_url(),
             'current_url':  self.request.url,
+            'site_config': self.app.get_config('site'),
         })
         if self.messages:
             kwargs['messages'] = json_encode([dict(body=body, level=level)

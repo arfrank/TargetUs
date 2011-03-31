@@ -3,8 +3,10 @@
 config = {}
 
 config['site'] = {
-'appspot_id':'qrtar',
-'main_url':'http://www.qrtar.com/'
+'appspot_id':'target-us',
+'main_url':'http://target-us.appspot.com/',
+'title': 'TargetUs',
+'subdomain':'target-us.appspot.com/'
 }
 # Configurations for the 'tipfy' module.
 config['tipfy'] = {

@@ -1,0 +1,15 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+	<ul>
+		{% if hashes.count %}
+			{% for h in hashes %}
+				<li><a href="/manage/edit/{{h.hash}}">{{h.hash}}</a></li>
+			{% endfor %}
+		{% else%}
+		<p>
+			You have not yet created any redirections.
+		</p>
+		{% endif %}
+	</ul>
+{% endblock %}

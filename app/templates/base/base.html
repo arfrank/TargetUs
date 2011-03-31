@@ -6,14 +6,14 @@
 	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>{% if section %}
         	{{section}} - 
-        {% endif %}QRtar</title>
+        {% endif %}{{site_config.title}}</title>
         <link rel="stylesheet" type="text/css" href="/static/styles/screen.css">
 		
     </head>
     <body>
         <div class="yui-d1">
             <div class="top">
-                <h1>QRtar</h1>
+                <h1>{{site_config.title}}</h1>
                 <div class="user-status">
                     <p>{% if current_user or auth_session -%}
                         {% if current_user -%}
@@ -39,8 +39,8 @@
                     <ul class="menu">
                         <li{% if section == 'home' %} class="active"{% endif %}><a href="{{ url_for('home') }}">Home</a></li>
 						{% if current_user %}
-                        	<li{% if section == 'manage' %} class="active"{% endif %}><a href="{{ url_for('manage') }}">Manage</a></li>
-	                        <li{% if section == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('statistics') }}">Statistics</a></li>
+                        	<li{% if section == 'manage' %} class="active"{% endif %}><a href="{{ url_for('manage/home') }}">Manage</a></li>
+	                        <li{% if section == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('statistics/home') }}">Statistics</a></li>
 						{% endif %}
                     </ul>
                 </div>
@@ -52,16 +52,7 @@
 
         {%- block body_extra %}
             <script src="/static/scripts/scripts.js"></script>
-			<script src="/static/scripts/custom.js?id=233"></script>
-            {%- block messages -%}
-                <script>
-                tipfy.instances = {};
-                tipfy.instances.messages = new tipfy.ui.Messages('tipfy-messages');
-                {% if messages %}
-                tipfy.instances.messages.addMessages({{ messages }});
-                {% endif %}
-                </script>
-            {%- endblock -%}
+			<script src="/static/scripts/custom.js?id=111"></script>
         {% endblock %}
 		<br>
 			<center>{{auth_session.namespace|e}} - NS</center>

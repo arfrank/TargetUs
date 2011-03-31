@@ -12,9 +12,8 @@ from tipfyext.wtforms import Form, fields, validators
 REQUIRED = validators.required()
 
 class MainHandler(LoggedInHandler):
-	@user_required
 	def get(self, **kwargs):
-		return self.render_response('manage/home.html', section='Home')
+		return self.render_response('manage/home.html', section='manage')
 
 def ensure_hash(form,field):
 	#we're already in the right namespace
@@ -71,11 +70,11 @@ class EditHandler(LoggedInHandler):
 
 	def get(self, hash = None, **kwargs):
 		if hash == None:
-			return self.redirect(url_for('manage/create'))
+			return self.redirect(self.request.url_for('manage/create'))
 		
 		h = hashes.Hash.all().filter('hash = ', str(hash)).get()
 		if not h:
-			return self.redirect(url_for('manage/create'))
+			return self.redirect(self.request.url_for('manage/create'))
 		context = {
 			'hash': h,
 			'form':self.form,
@@ -85,8 +84,24 @@ class EditHandler(LoggedInHandler):
 	def post(self, **kwargs):
 		pass
 
+class AllHandler(LoggedInHandler):
+	def get(self,**kwargs):
+		context = {
+			'section':'All',
+			'hashes': hashes.Hash.all().filter('deleted = ',False),
+		}
+		return self.render_response('manage/all.html', **context)
 
-	
+class ViewHandler(LoggedInHandler):
+	def get(self,hash = None, **kwargs):
+		context = {
+			'section':'View',
+			'hashes': hashes.Hash.all().filter('deleted = ',False),
+		}
+		return self.render_response('manage/all.html', **context)
+
+
+
 class InviteHandler(LoggedInHandler):
 	def get(self, **kwargs):
 		pass

@@ -15,11 +15,16 @@ rules = [
 #	Rule('/auth/google/', endpoint='auth/google', handler='auth.handlers.GoogleAuthHandler'),
 #	Rule('/auth/twitter/', endpoint='auth/twitter', handler='auth.handlers.TwitterAuthHandler'),
 #	Rule('/auth/yahoo/', endpoint='auth/yahoo', handler='auth.handlers.YahooAuthHandler'),
-	Rule('/manage', endpoint='manage', handler='manage.handlers.MainHandler'),
+	Rule('/manage', endpoint='manage/home', handler='manage.handlers.MainHandler'),
+
 	Rule('/manage/create', endpoint='manage/create', handler='manage.handlers.CreateHandler'),
 	Rule('/manage/edit/<hash>', endpoint='manage/edit', handler='manage.handlers.EditHandler'),
+
+	Rule('/manage/all', endpoint='manage/all', handler='manage.handlers.AllHandler'),
+	Rule('/manage/view/<hash>', endpoint='manage/view', handler='manage.handlers.ViewHandler'),
+
 	Rule('/manage/invite', endpoint='manage/invite', handler='manage.handlers.InviteHandler'),
-	Rule('/statistics', endpoint='statistics', handler='auth.handlers.ContentHandler'),
+	Rule('/statistics', endpoint='statistics/home', handler='auth.handlers.ContentHandler'),
 
 	Rule('/content', endpoint='content/index', handler='auth.handlers.ContentHandler'),
 	Rule('/r/<hash>', endpoint='redirect', handler='redirector.handlers.MainHandler'),

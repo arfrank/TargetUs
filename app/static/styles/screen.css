@@ -78,3 +78,13 @@ html, body {
 .footer a {
     color: #999999;
 }
+
+.error{
+	background:#bb0000;
+}
+.right{
+	float:right;
+}
+.clearer{
+	clear: both;
+}

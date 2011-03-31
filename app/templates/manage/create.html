@@ -7,12 +7,12 @@
 		font-weight:bold;
 	}
 </style>
-	<h1>Create a new redirector</h1>
+	<h1>Create a new redirection</h1>
     <form method="post" id="create_form" action="{{ current_url }}" enctype="multipart/form-data" class="tipfy-form">
 	<ol>
         <li>{{ form_field(form.hash, class='large') }}
 			<p>
-				Optional: Created automatically if not entered (ie: xxx.qr.it/r/<b>xxxxx</b> )
+				Optional: Created automatically if not entered<br>(ie: {{auth_session.namespace}}.{{site_config.subdomain}}/r/<b>xxxxx</b> )
 			</p>
 		</li>
         <li>{{ form_field(form.desc, class='large') }}
@@ -20,7 +20,7 @@
 		<br>
 		<h2>Choose redirect options</h2>
 		<li>
-			<select name="redirector1" class="redirect-dropdown">
+			<select id="redirector1" name="redirector1" class="redirect-dropdown">
 				<option class="cat" value="">Select an option</option>
 				<!--<option class="cat" value="disallow">Device Family</option>-->
 				<option value="ios">iOs (iPhone/iPod/iPad)</option>
@@ -33,10 +33,10 @@
 				<option value="ipad">iPad</option>
 				<option value="androidphone">Android Phone</option>
 				<option value="androidtablet">Android Tablet</option>-->
-			</select> URL: <input name="redirect1" value="">
+			</select> URL: <input id="redirect1" name="redirect1" value="">
 		</li>
 		<li>
-			<select name="redirector2" class="redirect-dropdown">
+			<select id="redirector2" name="redirector2" class="redirect-dropdown">
 				<option class="cat" value="">Select an option</option>
 				<!--<option class="cat" value="disallow">Device Family</option>-->
 				<option value="ios">iOs (iPhone/iPod/iPad)</option>
@@ -49,10 +49,10 @@
 				<option value="ipad">iPad</option>
 				<option value="androidphone">Android Phone</option>
 				<option value="androidtablet">Android Tablet</option>-->
-			</select> URL: <input name="redirect2" value="">
+			</select> URL: <input id="redirect2" name="redirect2" value="">
 		</li>
 		<li>
-			<select name="redirector3" class="redirect-dropdown">
+			<select id="redirector3" name="redirector3" class="redirect-dropdown">
 				<option class="cat" value="">Select an option</option>
 				<!--<option class="cat" value="disallow">Device Family</option>-->
 				<option value="ios">iOs (iPhone/iPod/iPad)</option>
@@ -65,10 +65,10 @@
 				<option value="ipad">iPad</option>
 				<option value="androidphone">Android Phone</option>
 				<option value="androidtablet">Android Tablet</option>-->
-			</select> URL: <input name="redirect3" value="">
+			</select> URL: <input id="redirect3" name="redirect3" value="">
 		</li>
 		<li>
-			<select name="redirector4" class="redirect-dropdown">
+			<select id="redirector4" name="redirector4" class="redirect-dropdown">
 				<option class="cat" value="">Select an option</option>
 				<!--<option class="cat" value="disallow">Device Family</option>-->
 				<option value="ios">iOs (iPhone/iPod/iPad)</option>
@@ -81,7 +81,7 @@
 				<option value="ipad">iPad</option>
 				<option value="androidphone">Android Phone</option>
 				<option value="androidtablet">Android Tablet</option>-->
-			</select> URL: <input name="redirect4" value="">
+			</select> URL: <input id="redirect4" name="redirect4" value="">
 		</li>
         <li>
 			{{ form_field(form.default, class='large') }}
