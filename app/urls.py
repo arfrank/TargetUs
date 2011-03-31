@@ -16,6 +16,9 @@ rules = [
 #	Rule('/auth/twitter/', endpoint='auth/twitter', handler='auth.handlers.TwitterAuthHandler'),
 #	Rule('/auth/yahoo/', endpoint='auth/yahoo', handler='auth.handlers.YahooAuthHandler'),
 	Rule('/manage', endpoint='manage', handler='manage.handlers.MainHandler'),
+	Rule('/manage/create', endpoint='manage', handler='manage.handlers.CreateHandler'),
+	Rule('/manage/edit/<hash>', endpoint='manage', handler='manage.handlers.EditHandler'),
+	Rule('/manage/invite', endpoint='manage', handler='manage.handlers.InviteHandler'),
 	Rule('/statistics', endpoint='statistics', handler='auth.handlers.ContentHandler'),
 
 	Rule('/content', endpoint='content/index', handler='auth.handlers.ContentHandler'),

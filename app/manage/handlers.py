@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from base_handlers import BaseHandler,LoggedInHandler
 import model
+from model import hashes
 from tipfy.auth import (login_required, user_required, UserRequiredIfAuthenticatedMiddleware)
 from model.util.model_forms import model_form
 from werkzeug import cached_property
@@ -13,8 +14,8 @@ class MainHandler(LoggedInHandler):
 class CreateHandler(LoggedInHandler):
 	@cached_property
 	def form(self):
-		hash_form =  model_form(model.hashes.Hash, exclude=('user', 'hits'))
-		return hash_form(self.request)
+		hash_form =  model_form(hashes.Hash, exclude=('user', 'hits'))
+		return hash_form()
 
 	def get(self, **kwargs):
 		context = {
