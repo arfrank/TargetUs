@@ -16,7 +16,7 @@ rules = [
 #	Rule('/auth/google/', endpoint='auth/google', handler='auth.handlers.GoogleAuthHandler'),
 #	Rule('/auth/twitter/', endpoint='auth/twitter', handler='auth.handlers.TwitterAuthHandler'),
 #	Rule('/auth/yahoo/', endpoint='auth/yahoo', handler='auth.handlers.YahooAuthHandler'),
-	Rule('/manage', endpoint='manage', handler='auth.handlers.ContentHandler'),
+	Rule('/manage', endpoint='manage', handler='manage.handlers.MainHandler'),
 	Rule('/statistics', endpoint='statistics', handler='auth.handlers.ContentHandler'),
 
 	Rule('/content', endpoint='content/index', handler='auth.handlers.ContentHandler'),
