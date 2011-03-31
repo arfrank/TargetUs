@@ -65,6 +65,7 @@ class LoginHandler(BaseHandler):
 		ns = host.split('.')[0]
 		if not ns == 'www' or ns == self.app.get_config('site','appspot_id'):
 			return self.render_response('auth/redirect.html')
+
  		redirect_url = self.redirect_path()
 
 		if self.auth.user:
@@ -115,46 +116,6 @@ class LogoutHandler(BaseHandler):
 		self.auth.logout()
 		return self.redirect(self.redirect_path())
 
-"""
-class SignupHandler(BaseHandler):
-	@login_required
-	def get(self, **kwargs):
-		if self.auth.user:
-			# User is already registered, so don't display the signup form.
-			return self.redirect(self.redirect_path())
-
-		return self.render_response('auth/signup.html', form=self.form)
-
-	@login_required
-	def post(self, **kwargs):
-		redirect_url = self.redirect_path()
-
-		if self.auth.user:
-			# User is already registered, so don't process the signup form.
-			return self.redirect(redirect_url)
-
-		if self.form.validate():
-			auth_id = self.auth.session.get('id')
-			user = self.auth.create_user(self.form.nickname.data, auth_id)
-			if user:
-				self.auth.login_with_auth_id(user.auth_id, True)
-				self.session.add_flash('You are now registered. Welcome!',
-					'success', '_messages')
-				return self.redirect(redirect_url)
-			else:
-				self.messages.append(('This nickname is already registered.',
-					'error'))
-				return self.get(**kwargs)
-
-		self.messages.append(('A problem occurred. Please correct the '
-			'errors listed in the form.', 'error'))
-		return self.get(**kwargs)
-
-	@cached_property
-	def form(self):
-		return SignupForm(self.request)
-"""
-
 class RegisterHandler(BaseHandler):
 	def get(self, **kwargs):
 		redirect_url = self.redirect_path()
@@ -201,12 +162,13 @@ class RegisterHandler(BaseHandler):
 			#send out an email saying welcome here
 
 			namespace_manager.set_namespace(ns.name)
-			auth_id = '%s' % username
-			user = self.auth.create_user(username, auth_id, password=password)
+			auth_id = 'own|%s' % username
+			user = self.auth.create_user(username, auth_id, password=password, email = username)
 			if user:
 				self.auth.login_with_auth_id(user.auth_id, True)
 				self.session.add_flash('You are now registered. Welcome!',
 					'success', '_messages')
+				logging.info(redirect_url)
 				return self.redirect(redirect_url)
 			else:
 				self.messages.append(('This nickname is already registered.',

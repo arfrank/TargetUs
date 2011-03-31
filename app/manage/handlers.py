@@ -1,35 +1,40 @@
 # -*- coding: utf-8 -*-
-from base_handlers import BaseHandler
+from base_handlers import BaseHandler,LoggedInHandler
 import model
 from tipfy.auth import (login_required, user_required, UserRequiredIfAuthenticatedMiddleware)
+from model.util.model_forms import model_form
+from werkzeug import cached_property
 
-class MainHandler(BaseHandler):
+class MainHandler(LoggedInHandler):
 	@user_required
 	def get(self, **kwargs):
 		return self.render_response('manage/home.html', section='Home')
 
-class CreateHandler(BaseHandler):
-	@user_required
-	def get(self, **kwargs):
-		pass
+class CreateHandler(LoggedInHandler):
+	@cached_property
+	def form(self):
+		hash_form =  model_form(model.hashes.Hash, exclude=('user', 'hits'))
+		return hash_form(self.request)
 
-	@user_required
+	def get(self, **kwargs):
+		context = {
+			'form': self.form,
+		}
+		return self.render_response('manage/create.html', **context)
+
 	def post(self, **kwargs):
 		pass
 
 
-class EditHandler(BaseHandler):
-	@user_required
+class EditHandler(LoggedInHandler):
 	def get(self, **kwargs):
 		pass
 
-	@user_required
 	def post(self, **kwargs):
 		pass
 
 
 	
-class InviteHandler(BaseHandler):
-	@user_required
+class InviteHandler(LoggedInHandler):
 	def get(self, **kwargs):
 		pass

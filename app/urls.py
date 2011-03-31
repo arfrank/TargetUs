@@ -8,7 +8,6 @@ rules = [
 #	Rule('/', endpoint='home', handler='auth.handlers.HomeHandler'),
 	Rule('/auth/login', endpoint='auth/login', handler='auth.handlers.LoginHandler'),
 	Rule('/auth/logout', endpoint='auth/logout', handler='auth.handlers.LogoutHandler'),
-#	Rule('/auth/signup', endpoint='auth/signup', handler='auth.handlers.SignupHandler'),
 	Rule('/auth/register', endpoint='auth/register', handler='auth.handlers.RegisterHandler'),
 
 #	Rule('/auth/facebook/', endpoint='auth/facebook', handler='auth.handlers.FacebookAuthHandler'),

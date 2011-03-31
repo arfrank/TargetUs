@@ -2,7 +2,7 @@ from werkzeug import cached_property
 
 from tipfy import RequestHandler
 from tipfy.auth import (login_required, user_required,
-    UserRequiredIfAuthenticatedMiddleware)
+    UserRequiredIfAuthenticatedMiddleware,UserRequiredMiddleware)
 #from tipfy.auth.facebook import FacebookMixin
 #from tipfy.auth.friendfeed import FriendFeedMixin
 #from tipfy.auth.google import GoogleMixin
@@ -15,32 +15,33 @@ from tipfyext import wtforms
 from tipfyext.wtforms import Form, fields, validators
 
 import logging
-
+from google.appengine.api import namespace_manager
 class NamespaceMiddleware(object):
     def before_dispatch(self, handler):
 		#check that the namespace saved in the session matches the current namespace
 		auth = handler.auth
-		from google.appengine.api import namespace_manager
+		
 		namespace_manager.set_namespace('www')
-		host = handler.request.headers.get('Host')
-		splits = host.lower().split('.')
-		if auth.session and auth.session.get('namespace') != splits[0]:
-			namespace_manager.set_namespace(auth.session['namespace'])
-			if len(splits) > 1:
-				return handler.redirect(auth.session['namespace']+'.'.join(splits[1:]))
+		logging.info('do we have a user?')
+		if auth.session:
+			logging.info(auth.session)
+			logging.info('yes we have a session')
+			host = handler.request.headers.get('Host')
+			splits = host.lower().split('.')
+			if auth.session and auth.session.get('namespace') and auth.session.get('namespace') != splits[0]:
+				logging.info(auth.session.get('namespace'))
+				namespace_manager.set_namespace(auth.session.get('namespace'))
+				if len(splits) > 1:
+					return handler.redirect(auth.session['namespace']+'.'.join(splits[1:]))
 			else:
-				return handler.redirect('/')
-		else:
-			if 'appspot' in splits and len(splits)>=4:
-				logging.info('setting namespace to '+splits[0])
-				namespace_manager.set_namespace(splits[0])
-			elif len(splits) >= 3:
-				logging.info('setting namespace to '+splits[0])
-				namespace_manager.set_namespace(splits[0])
+				if 'appspot' in splits and len(splits)>=4:
+					logging.info('setting namespace to '+splits[0])
+					namespace_manager.set_namespace(splits[0])
+				elif len(splits) >= 3:
+					logging.info('setting namespace to '+splits[0])
+					namespace_manager.set_namespace(splits[0])
 # ----- Handlers -----
-
-class BaseHandler(RequestHandler, Jinja2Mixin):
-    middleware = [SessionMiddleware(), UserRequiredIfAuthenticatedMiddleware(), NamespaceMiddleware()]
+class Base(RequestHandler, Jinja2Mixin):
 
     @cached_property
     def messages(self):
@@ -63,7 +64,7 @@ class BaseHandler(RequestHandler, Jinja2Mixin):
             kwargs['messages'] = json_encode([dict(body=body, level=level)
                 for body, level in self.messages])
 
-        return super(BaseHandler, self).render_response(filename, **kwargs)
+        return super(Base, self).render_response(filename, **kwargs)
 
     def redirect_path(self, default='/'):
         if '_continue' in self.session:
@@ -87,5 +88,12 @@ class BaseHandler(RequestHandler, Jinja2Mixin):
 
         if not self.auth.user:
             url = self.auth.signup_url()
+            url = '/manage'
 
         return self.redirect(url)
+
+class LoggedInHandler(Base):
+	middleware = [SessionMiddleware(), NamespaceMiddleware(),UserRequiredMiddleware()]
+
+class BaseHandler(Base):
+    middleware = [SessionMiddleware(), NamespaceMiddleware(), UserRequiredIfAuthenticatedMiddleware()]
