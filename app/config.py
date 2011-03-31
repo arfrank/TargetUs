@@ -3,7 +3,8 @@
 config = {}
 
 config['site'] = {
-'appspot_id':'qrtar'
+'appspot_id':'qrtar',
+'main_url':'http://www.qrtar.com/'
 }
 # Configurations for the 'tipfy' module.
 config['tipfy'] = {

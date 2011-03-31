@@ -14,11 +14,21 @@ from tipfyext.jinja2 import Jinja2Mixin
 from tipfyext import wtforms
 from tipfyext.wtforms import Form, fields, validators
 
+import logging
 
+class NamespaceMiddleware(object):
+    def before_dispatch(self, handler):
+		from google.appengine.api import namespace_manager
+		namespace_manager.set_namespace('www')
+		host = handler.request.headers.get('Host')
+		splits = host.lower().split('.')
+		if len(splits) >= 3:
+			logging.info('setting namespace to '+splits[0])
+			namesapce_manager.set_namespace(splits[0])
 # ----- Handlers -----
 
 class BaseHandler(RequestHandler, Jinja2Mixin):
-    middleware = [SessionMiddleware(), UserRequiredIfAuthenticatedMiddleware()]
+    middleware = [SessionMiddleware(), UserRequiredIfAuthenticatedMiddleware(), NamespaceMiddleware()]
 
     @cached_property
     def messages(self):

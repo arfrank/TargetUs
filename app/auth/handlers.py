@@ -73,7 +73,7 @@ class LoginHandler(BaseHandler):
 
 		opts = {'continue': self.redirect_path()}
 		context = {
-			'form':					self.form,
+			'form': self.form,
 			#'facebook_login_url':	 self.url_for('auth/facebook', **opts),
 			#'friendfeed_login_url': self.url_for('auth/friendfeed', **opts),
 			#'google_login_url':	 self.url_for('auth/google', **opts),
@@ -160,6 +160,11 @@ class RegisterHandler(BaseHandler):
 		if self.auth.user:
 			# User is already registered, so don't display the registration form.
 			return self.redirect(redirect_url)
+		
+		from google.appengine.api import namespace_manager
+		ns = namespace_manager.get_namespace()
+		if ns != 'www':
+			return self.redirect(self.app.get_config('site','main_url')+'auth/register')
 
 		return self.render_response('auth/register.html', form=self.form)
 
@@ -180,7 +185,15 @@ class RegisterHandler(BaseHandler):
 					'error'))
 				return self.get(**kwargs)
 
-			auth_id = 'own|%s' % username
+			from google.appengine.api import namespace_manager
+			from model import namespaces
+			namespace_manager.set_namespace('www')
+			ns = namespaces.Namespace()
+			ns.name = self.form.namespace.data
+			ns.put()
+
+			namespace_manager.set_namespace(ns.name)
+			auth_id = '%s' % username
 			user = self.auth.create_user(username, auth_id, password=password)
 			if user:
 				self.auth.login_with_auth_id(user.auth_id, True)
