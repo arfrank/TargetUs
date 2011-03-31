@@ -2,8 +2,13 @@
 {% from '_form_macros.html' import form_field %}
 
 {% block body %}
+<style type="text/css" media="screen">
+	option.cat{
+		font-weight:bold;
+	}
+</style>
 	<h1>Create a new redirector</h1>
-    <form method="post" action="{{ current_url }}" enctype="multipart/form-data" class="tipfy-form">
+    <form method="post" id="create_form" action="{{ current_url }}" enctype="multipart/form-data" class="tipfy-form">
 	<ol>
         <li>{{ form_field(form.hash, class='large') }}
 			<p>
@@ -11,6 +16,72 @@
 			</p>
 		</li>
         <li>{{ form_field(form.desc, class='large') }}
+		</li>
+		<br>
+		<h2>Choose redirect options</h2>
+		<li>
+			<select name="redirector1" class="redirect-dropdown">
+				<option class="cat" value="">Select an option</option>
+				<!--<option class="cat" value="disallow">Device Family</option>-->
+				<option value="ios">iOs (iPhone/iPod/iPad)</option>
+				<option value="android">Android</option>
+				<option value="webos">WebOS (HP/Palm)</option>
+				<option value="blackberry">Blackberry</option>
+				<!--<option class="cat" value="disallow">Device</option>
+				<option value="iphone">iPhone</option>
+				<option value="ipod">iPod</option>
+				<option value="ipad">iPad</option>
+				<option value="androidphone">Android Phone</option>
+				<option value="androidtablet">Android Tablet</option>-->
+			</select> URL: <input name="redirect1" value="">
+		</li>
+		<li>
+			<select name="redirector2" class="redirect-dropdown">
+				<option class="cat" value="">Select an option</option>
+				<!--<option class="cat" value="disallow">Device Family</option>-->
+				<option value="ios">iOs (iPhone/iPod/iPad)</option>
+				<option value="android">Android</option>
+				<option value="webos">WebOS (HP/Palm)</option>
+				<option value="blackberry">Blackberry</option>
+				<!--<option class="cat" value="disallow">Device</option>
+				<option value="iphone">iPhone</option>
+				<option value="ipod">iPod</option>
+				<option value="ipad">iPad</option>
+				<option value="androidphone">Android Phone</option>
+				<option value="androidtablet">Android Tablet</option>-->
+			</select> URL: <input name="redirect2" value="">
+		</li>
+		<li>
+			<select name="redirector3" class="redirect-dropdown">
+				<option class="cat" value="">Select an option</option>
+				<!--<option class="cat" value="disallow">Device Family</option>-->
+				<option value="ios">iOs (iPhone/iPod/iPad)</option>
+				<option value="android">Android</option>
+				<option value="webos">WebOS (HP/Palm)</option>
+				<option value="blackberry">Blackberry</option>
+				<!--<option class="cat" value="disallow">Device</option>
+				<option value="iphone">iPhone</option>
+				<option value="ipod">iPod</option>
+				<option value="ipad">iPad</option>
+				<option value="androidphone">Android Phone</option>
+				<option value="androidtablet">Android Tablet</option>-->
+			</select> URL: <input name="redirect3" value="">
+		</li>
+		<li>
+			<select name="redirector4" class="redirect-dropdown">
+				<option class="cat" value="">Select an option</option>
+				<!--<option class="cat" value="disallow">Device Family</option>-->
+				<option value="ios">iOs (iPhone/iPod/iPad)</option>
+				<option value="android">Android</option>
+				<option value="webos">WebOS (HP/Palm)</option>
+				<option value="blackberry">Blackberry</option>
+				<!--<option class="cat" value="disallow">Device</option>
+				<option value="iphone">iPhone</option>
+				<option value="ipod">iPod</option>
+				<option value="ipad">iPad</option>
+				<option value="androidphone">Android Phone</option>
+				<option value="androidtablet">Android Tablet</option>-->
+			</select> URL: <input name="redirect4" value="">
 		</li>
         <li>
 			{{ form_field(form.default, class='large') }}

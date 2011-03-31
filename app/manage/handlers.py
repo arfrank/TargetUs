@@ -25,14 +25,14 @@ def ensure_hash(form,field):
 		if h:
 			raise wtforms.ValidationError('That hash has already been used.')
 		#also validate that its allowed for things
-		restricted = [' ',',','?','.']
-		for r in restricted:
-			if r in field.data:
-				raise wtforms.ValidationError('Hashes may only contain a-z, A-Z &amp; 0-9')
-				
+		#^[0-9A-Za-z._-]{0,100}$
+
+class LocationForm(Form):
+	family = fields.SelectField()
+	location = fields.TextField('Redirect URL', validators = [validators.URL()])
 
 class CreateForm(Form):
-	hash = fields.TextField('Hash Tag', validators = [ensure_hash])
+	hash = fields.TextField('Hash Tag', validators = [ensure_hash, validators.Regexp('^[0-9A-Za-z]{0,100}$', message="Hashes may only use A-Z, a-z and 0-9")])
 	desc = fields.TextField('Link Description', validators = [REQUIRED])
 	default = fields.TextField('Default', validators = [REQUIRED, validators.URL()])
 	

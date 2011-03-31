@@ -14,6 +14,8 @@ from google.appengine.ext import deferred
 from google.appengine.api import memcache, taskqueue
 from utils import devices
 
+from google.appengine.api import namespace_manager
+
 class MainHandler(RequestHandler):
 	middleware = [SessionMiddleware()]
 
@@ -41,9 +43,14 @@ class MainHandler(RequestHandler):
 		
 		#DETERMINE NAMESPACE AND THE ACTUAL HOST URL
 		namespace, host = self.get_namespace(self.request.headers)
+		if self.request.args.get('namespace'):
+			namespace = self.request.args.get('namespace')
+		logging.info('setting namespace to: '+namespace)
+		namespace_manager.set_namespace(namespace)
 
 		#SEE IF THAT HASH IS CACHED FOR THIS NAMESPACE SO I DONT NEED TO LOOKUP the hash key?
 		hashed = memcache.get(namespace+'-hash-'+str(hash))
+		
 		if not hashed:
 			hashed = hashes.Hash.all().filter('hash =',hash).get()
 
@@ -57,10 +64,10 @@ class MainHandler(RequestHandler):
 			logging.info(family)
 
 			#SET THE HASH
-			#memcache.set(namespace+'-hash-'+str(hash), True,time =  2629743, namespace = namespace)
+			memcache.set(namespace+'-hash-'+str(hash), True,time =  2629743)
 			
 			#redirector should set cookie
-			r = self.redirect('/')
+			r = self.redirect(hashed.default)
 			
 			
 			#CHECK UNIQUENESS FROM COOKIES FOR STATISTICS

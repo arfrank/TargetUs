@@ -8,7 +8,13 @@ $(document).ready(function() {
 		}
 		return false;
 	});
-
+	$('#create_form').submit(function() {
+		for (var i=1; i < 5 ; i++) {
+			if ($('#redirect'+i).val() != '') {
+				
+			};
+		};
+	});
 
 });
 
