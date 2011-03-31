@@ -46,8 +46,7 @@ class RegistrationForm(Form):
 	password = fields.PasswordField('Password', validators=[REQUIRED])
 	password_confirm = fields.PasswordField('Confirm the password', validators=[REQUIRED])
 	namespace = fields.TextField('Namespace', validators=[REQUIRED, unique_namespace])
-
-
+	timezone = fields.TextField('Timezone', validators=[REQUIRED])
 
 class HomeHandler(BaseHandler):
 	def get(self, **kwargs):
@@ -62,8 +61,9 @@ class ContentHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
 	def get(self, **kwargs):
-		logging.info(self.request.host)
-		if not self.request.host.split('.')[0].lower() == 'www' or self.request.host.split('.')[0].lower() == self.app.get_config('site','appspot_id'):
+		host = self.request.host.lower()
+		ns = host.split('.')[0]
+		if not ns == 'www' or ns == self.app.get_config('site','appspot_id'):
 			return self.render_response('auth/redirect.html')
  		redirect_url = self.redirect_path()
 
@@ -97,6 +97,8 @@ class LoginHandler(BaseHandler):
 			res = self.auth.login_with_form(username, password, remember)
 			if res:
 				self.session.add_flash('Welcome back!', 'success', '_messages')
+				#this should be more robust, but good for now.
+				self.session['namespace'] = ns
 				return self.redirect(redirect_url)
 
 		self.messages.append(('Authentication failed. Please try again.',
@@ -189,8 +191,14 @@ class RegisterHandler(BaseHandler):
 			from model import namespaces
 			namespace_manager.set_namespace('www')
 			ns = namespaces.Namespace()
+
 			ns.name = self.form.namespace.data
+			ns.email = username
+			ns.timezone = self.form.timezone.data
+
 			ns.put()
+
+			#send out an email saying welcome here
 
 			namespace_manager.set_namespace(ns.name)
 			auth_id = '%s' % username

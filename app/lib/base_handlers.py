@@ -18,16 +18,25 @@ import logging
 
 class NamespaceMiddleware(object):
     def before_dispatch(self, handler):
+		#check that the namespace saved in the session matches the current namespace
+		auth = handler.auth
 		from google.appengine.api import namespace_manager
 		namespace_manager.set_namespace('www')
 		host = handler.request.headers.get('Host')
 		splits = host.lower().split('.')
-		if 'appspot' in splits and len(splits)>=4:
-			logging.info('setting namespace to '+splits[0])
-			namesapce_manager.set_namespace(splits[0])
-		elif len(splits) >= 3:
-			logging.info('setting namespace to '+splits[0])
-			namesapce_manager.set_namespace(splits[0])
+		if auth.session['namespace'] != splits[0]:
+			namespace_manager.set_namespace(auth.session['namespace'])
+			if len(splits) > 1:
+				return handler.redirect(auth.session['namespace']+'.'.join(splits[1:]))
+			else:
+				return handler.redirect('/')
+		else:
+			if 'appspot' in splits and len(splits)>=4:
+				logging.info('setting namespace to '+splits[0])
+				namespace_manager.set_namespace(splits[0])
+			elif len(splits) >= 3:
+				logging.info('setting namespace to '+splits[0])
+				namespace_manager.set_namespace(splits[0])
 # ----- Handlers -----
 
 class BaseHandler(RequestHandler, Jinja2Mixin):
