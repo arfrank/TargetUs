@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+{% from '_form_macros.html' import form_field %}
+
+{% block body %}
+	<h1>Create a new redirector</h1>
+    <form method="post" action="{{ current_url }}" enctype="multipart/form-data" class="tipfy-form">
+	<ol>
+        <li>{{ form_field(form.hash, class='large') }}
+			<p>
+				Optional: Created automatically if not entered (ie: xxx.qr.it/r/<b>xxxxx</b> )
+			</p>
+		</li>
+        <li>{{ form_field(form.desc, class='large') }}
+		</li>
+        <li>
+			{{ form_field(form.default, class='large') }}
+			<p>
+				Default URL to redirect to when no device or family matches are made.
+			</p>
+		</li>
+	</ol>
+	<fieldset class="submit">
+        <input type="submit" name="submit" value="{{ _('Create') }}">
+    </fieldset>
+    
+	</form>
+{% endblock %}

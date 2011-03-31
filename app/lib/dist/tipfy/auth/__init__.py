@@ -11,13 +11,15 @@
 from __future__ import absolute_import
 
 import uuid
-
+import logging
 from werkzeug import abort
 
 from tipfy import DEV_APPSERVER
 
 from werkzeug import (cached_property, check_password_hash,
     generate_password_hash, import_string)
+
+from google.appengine.api import namespace_manager
 
 #: Default configuration values for this module. Keys are:
 #:
@@ -99,7 +101,7 @@ class BaseAuthStore(object):
         :returns:
             A URL to perform signup.
         """
-        return self._url('auth/signup', **kwargs)
+        return self._url('manage', **kwargs)
 
     def create_user(self, username, auth_id, **kwargs):
         """Creates a new user entity.
@@ -196,7 +198,7 @@ class SessionAuthStore(BaseAuthStore):
 
     def _set_session(self, auth_id, user=None, remember=False):
         kwargs = {}
-        session = {'id': auth_id}
+        session = {'id': auth_id, 'namespace': namespace_manager.get_namespace() }
         if user:
             session['token'] = user.session_id
 
@@ -268,10 +270,12 @@ class MultiAuthStore(SessionAuthStore):
         session = self._session_base.get('_auth', {})
         auth_id = session.get('id')
         session_token = session.get('token')
-
         if auth_id is None or session_token is None:
             # No session, no user.
             return
+        ns = session.get('namespace')
+        if ns:
+            namespace_manager.set_namespace(ns)
 
         self._session = session
 
@@ -484,7 +488,9 @@ def _user_required(handler):
         return handler.redirect(auth.login_url())
 
     if not auth.user:
+        logging.info('user not actually a user')
         return handler.redirect(auth.signup_url())
+    logging.info('got out of this one ok')
 
 
 def _user_required_if_authenticated(handler):
@@ -492,8 +498,9 @@ def _user_required_if_authenticated(handler):
     UserRequiredIfAuthenticatedMiddleware.
     """
     auth = handler.auth
-
+    logging.info('this is where we are')
     if auth.session and not auth.user:
+        logging.info('scotty we have a problem')
         return handler.redirect(auth.signup_url())
 
 

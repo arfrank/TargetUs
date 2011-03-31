@@ -18,6 +18,8 @@ from tipfyext.wtforms import Form, fields, validators
 
 from base_handlers import BaseHandler
 
+from model import  namespaces
+
 # ----- Forms -----
 
 REQUIRED = validators.required()
@@ -31,14 +33,20 @@ class LoginForm(Form):
 class SignupForm(Form):
 	nickname = fields.TextField('Nickname', validators=[REQUIRED])
 
-
+def unique_namespace(form, field):
+	reserved = ['www','demo','email','admin','appspot']
+	if field.data.lower() in reserved:
+		raise wtforms.ValidationError('That namespace is reserved.')
+	nm = namespaces.Namespace.all().filter('name =',field.data.lower()).get()
+	if nm:
+		raise wtforms.ValidationError('That namespace has already been claimed, please try another one.')
+		
 class RegistrationForm(Form):
-	username = fields.TextField('Username', validators=[REQUIRED])
+	username = fields.TextField('Email Address', validators=[REQUIRED, validators.email()])
 	password = fields.PasswordField('Password', validators=[REQUIRED])
 	password_confirm = fields.PasswordField('Confirm the password', validators=[REQUIRED])
-	namespace = fields.TextField('Namespace', validators=[REQUIRED])
-
-
+	namespace = fields.TextField('Namespace', validators=[REQUIRED, unique_namespace])
+	timezone = fields.TextField('Timezone', validators=[REQUIRED])
 
 class HomeHandler(BaseHandler):
 	def get(self, **kwargs):
@@ -53,9 +61,11 @@ class ContentHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
 	def get(self, **kwargs):
-		logging.info(self.request.host)
-		if not self.request.host.split('.')[0].lower() == 'www' or self.request.host.split('.')[0].lower() == self.app.get_config('site','appspot_id'):
+		host = self.request.host.lower()
+		ns = host.split('.')[0]
+		if not ns == 'www' or ns == self.app.get_config('site','appspot_id'):
 			return self.render_response('auth/redirect.html')
+
  		redirect_url = self.redirect_path()
 
 		if self.auth.user:
@@ -64,7 +74,7 @@ class LoginHandler(BaseHandler):
 
 		opts = {'continue': self.redirect_path()}
 		context = {
-			'form':					self.form,
+			'form': self.form,
 			#'facebook_login_url':	 self.url_for('auth/facebook', **opts),
 			#'friendfeed_login_url': self.url_for('auth/friendfeed', **opts),
 			#'google_login_url':	 self.url_for('auth/google', **opts),
@@ -88,6 +98,8 @@ class LoginHandler(BaseHandler):
 			res = self.auth.login_with_form(username, password, remember)
 			if res:
 				self.session.add_flash('Welcome back!', 'success', '_messages')
+				#this should be more robust, but good for now.
+				self.session['namespace'] = ns
 				return self.redirect(redirect_url)
 
 		self.messages.append(('Authentication failed. Please try again.',
@@ -104,46 +116,6 @@ class LogoutHandler(BaseHandler):
 		self.auth.logout()
 		return self.redirect(self.redirect_path())
 
-
-class SignupHandler(BaseHandler):
-	@login_required
-	def get(self, **kwargs):
-		if self.auth.user:
-			# User is already registered, so don't display the signup form.
-			return self.redirect(self.redirect_path())
-
-		return self.render_response('auth/signup.html', form=self.form)
-
-	@login_required
-	def post(self, **kwargs):
-		redirect_url = self.redirect_path()
-
-		if self.auth.user:
-			# User is already registered, so don't process the signup form.
-			return self.redirect(redirect_url)
-
-		if self.form.validate():
-			auth_id = self.auth.session.get('id')
-			user = self.auth.create_user(self.form.nickname.data, auth_id)
-			if user:
-				self.auth.login_with_auth_id(user.auth_id, True)
-				self.session.add_flash('You are now registered. Welcome!',
-					'success', '_messages')
-				return self.redirect(redirect_url)
-			else:
-				self.messages.append(('This nickname is already registered.',
-					'error'))
-				return self.get(**kwargs)
-
-		self.messages.append(('A problem occurred. Please correct the '
-			'errors listed in the form.', 'error'))
-		return self.get(**kwargs)
-
-	@cached_property
-	def form(self):
-		return SignupForm(self.request)
-
-
 class RegisterHandler(BaseHandler):
 	def get(self, **kwargs):
 		redirect_url = self.redirect_path()
@@ -151,6 +123,11 @@ class RegisterHandler(BaseHandler):
 		if self.auth.user:
 			# User is already registered, so don't display the registration form.
 			return self.redirect(redirect_url)
+		
+		from google.appengine.api import namespace_manager
+		ns = namespace_manager.get_namespace()
+		if ns != 'www':
+			return self.redirect(self.app.get_config('site','main_url')+'auth/register')
 
 		return self.render_response('auth/register.html', form=self.form)
 
@@ -171,12 +148,27 @@ class RegisterHandler(BaseHandler):
 					'error'))
 				return self.get(**kwargs)
 
+			from google.appengine.api import namespace_manager
+			from model import namespaces
+			namespace_manager.set_namespace('www')
+			ns = namespaces.Namespace()
+
+			ns.name = self.form.namespace.data
+			ns.email = username
+			ns.timezone = self.form.timezone.data
+
+			ns.put()
+
+			#send out an email saying welcome here
+
+			namespace_manager.set_namespace(ns.name)
 			auth_id = 'own|%s' % username
-			user = self.auth.create_user(username, auth_id, password=password)
+			user = self.auth.create_user(username, auth_id, password=password, email = username)
 			if user:
 				self.auth.login_with_auth_id(user.auth_id, True)
 				self.session.add_flash('You are now registered. Welcome!',
 					'success', '_messages')
+				logging.info(redirect_url)
 				return self.redirect(redirect_url)
 			else:
 				self.messages.append(('This nickname is already registered.',

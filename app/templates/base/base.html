@@ -38,6 +38,10 @@
                 <div class="yui-b">
                     <ul class="menu">
                         <li{% if section == 'home' %} class="active"{% endif %}><a href="{{ url_for('home') }}">Home</a></li>
+						{% if current_user %}
+                        	<li{% if section == 'manage' %} class="active"{% endif %}><a href="{{ url_for('manage') }}">Manage</a></li>
+	                        <li{% if section == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('statistics') }}">Statistics</a></li>
+						{% endif %}
                     </ul>
                 </div>
             </div>
@@ -48,7 +52,7 @@
 
         {%- block body_extra %}
             <script src="/static/scripts/scripts.js"></script>
-			<script src="/static/scripts/custom.js?id=23"></script>
+			<script src="/static/scripts/custom.js?id=233"></script>
             {%- block messages -%}
                 <script>
                 tipfy.instances = {};
@@ -59,5 +63,7 @@
                 </script>
             {%- endblock -%}
         {% endblock %}
+		<br>
+			<center>{{auth_session.namespace|e}} - NS</center>
     </body>
 </html>

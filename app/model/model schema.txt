@@ -1,0 +1,5 @@
+A hash has many locations.  
+
+A redirect is an instance of a location resolving for a hash.
+
+Hit hash url -> location lookup -> redirect created for specific instance
