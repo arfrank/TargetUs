@@ -38,7 +38,7 @@
                 <div class="yui-b">
                     <ul class="menu">
                         <li{% if section == 'home' %} class="active"{% endif %}><a href="{{ url_for('home') }}">Home</a></li>
-						{% if user %}
+						{% if current_user %}
                         	<li{% if section == 'manage' %} class="active"{% endif %}><a href="{{ url_for('manage') }}">Manage</a></li>
 	                        <li{% if section == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('statistics') }}">Statistics</a></li>
 						{% endif %}
@@ -63,9 +63,7 @@
                 </script>
             {%- endblock -%}
         {% endblock %}
-		<script type="text/javascript" charset="utf-8">
-			var _spinnakr_welcome_id = "968962960";
-		</script>
-		<script src="http://s5.spinnakr.com/js/welcome.js" type="text/javascript" charset="utf-8"></script>
+		<br>
+			<center>{{auth_session.namespace|e}} - NS</center>
     </body>
 </html>

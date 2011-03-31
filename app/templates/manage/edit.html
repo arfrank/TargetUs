@@ -1,5 +1,14 @@
 {% extends "base/base.html" %}
 
 {% block body %}
-	adfa
+	<h1>Edit Hash</h1>
+	<p>
+		Hash Tag: {{auth_session.namespace}}.qr.it/r/<b>{{hash.hash}}</b>
+	</p>
+	<P>
+		Description: {{hash.desc|e}}
+	</p>
+	<P>
+		Default Link: {{hash.default}}
+	</p>
 {% endblock %}

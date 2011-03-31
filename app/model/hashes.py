@@ -4,6 +4,7 @@ from google.appengine.ext import db
 from model.base import BaseModel
 
 class Hash(BaseModel):
+	hash = db.StringProperty()
 	user = db.ReferenceProperty(User) #who created the hash - not truely important, but good for reference
 	desc = db.TextProperty()
 	hits = db.IntegerProperty(default = 0)
