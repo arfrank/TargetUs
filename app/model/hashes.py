@@ -22,7 +22,16 @@ class Hash(BaseModel):
 			
 	def get_locations(self):
 		return Location.all().filter('hash =',self).filter('deleted =',False)
-		
+	
+	
+	
+	def get_location(self, family):
+		l = Location.all().filter('hash =',self).filter('deleted =',False).filter('family =',family.lower()).get()
+		if l:
+			return l
+		l = Location.all().filter('hash =',self).filter('deleted =',False).filter('family =','default').get()
+		return l
+
 	def alter_locations(self, **kwargs):
 		#expecting in kwargs
 		#ios, android, webos, blackberry, default

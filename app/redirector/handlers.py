@@ -45,14 +45,14 @@ class MainHandler(RequestHandler):
 		namespace, host = self.get_namespace(self.request.headers)
 		if self.request.args.get('namespace'):
 			namespace = self.request.args.get('namespace')
-		logging.info('setting namespace to: '+namespace)
+		logging.info('Redirector: Setting namespace to: '+namespace)
 		namespace_manager.set_namespace(namespace)
 
 		#SEE IF THAT HASH IS CACHED FOR THIS NAMESPACE SO I DONT NEED TO LOOKUP the hash key?
 		hashed = memcache.get(namespace+'-hash-'+str(hash))
 		
 		if not hashed:
-			hashed = hashes.Hash.all().filter('hash =',hash).get()
+			hashed = hashes.Hash.all().filter('hash =',hash).filter('deleted =',False).get()
 
 		#IF HASHED DOESNT EXIST
 		if False and not hashed:
@@ -60,8 +60,8 @@ class MainHandler(RequestHandler):
 		#OTHERWISE LETS START PROCESSING
 		else:
 			device, family = devices.determine_device(self.request.headers)
-			logging.info(device)
-			logging.info(family)
+			logging.info('Redirector: Device = '+device)
+			logging.info('Redirector: Family = '+amily)
 
 			#SET THE HASH
 			memcache.set(namespace+'-hash-'+str(hash), True,time =  2629743)
