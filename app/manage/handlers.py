@@ -70,11 +70,11 @@ class EditHandler(LoggedInHandler):
 
 	def get(self, hash = None, **kwargs):
 		if hash == None:
-			return self.redirect(self.request.url_for('manage/create'))
+			return self.redirect(self.url_for('manage/create'))
 		
 		h = hashes.Hash.all().filter('hash = ', str(hash)).get()
 		if not h:
-			return self.redirect(self.request.url_for('manage/create'))
+			return self.redirect(self.url_for('manage/create'))
 		context = {
 			'hash': h,
 			'form':self.form,

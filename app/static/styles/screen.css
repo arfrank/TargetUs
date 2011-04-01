@@ -80,8 +80,8 @@ html, body {
 }
 
 .error{
-	background:#bb0000;
-	border:1px solid #ff0000;
+	background:#bb0000!important;
+	border:1px solid #ff0000!important;
 }
 .right{
 	float:right;
