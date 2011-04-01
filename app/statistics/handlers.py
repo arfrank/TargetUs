@@ -23,7 +23,7 @@ from google.appengine.api import namespace_manager
 # DEVICE
 # 
 class MainHandler(RequestHandler):
-	def namespace_statistics(self):
+	def namespace_statistics(self, namespace):
 		namespace = 'cnn'
 		counter_names = ['']
 	
@@ -51,6 +51,7 @@ class MainHandler(RequestHandler):
 		namespace_manager.set_namespace(namespace)
 
 		self.hash_statistics(namespace,hash, keywords)
+		self.namespace_statistics(namespace)
 		time = self.request.form.get('Time')
 		ua = self.request.form.get('User-Agent')
 		logging.info(time)

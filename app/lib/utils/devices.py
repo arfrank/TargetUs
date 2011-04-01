@@ -1,3 +1,4 @@
+#this should really be done via a dictionary, but quick then fast
 def determine_device(headers):
 	ua = headers.get('User-Agent')
 	family, device = 'default', 'default'
@@ -14,12 +15,20 @@ def determine_device(headers):
 		family = 'Android'
 		if 'Android 2.1' in ua:
 			device = 'Eclair'
-		if 'Android 2.0' in ua:
+		elif 'Android 2.0' in ua:
 			device = 'Eclair'
-		if 'Android 2.2' in ua:
+		elif 'Android 2.2' in ua:
 			device = 'Froyo'
-		if 'Android 2.3' in ua:
+		elif 'Android 2.3' in ua:
 			device = 'Gingerbread'
-		if 'Android 3.0' in ua:
+		elif 'Android 3.0' in ua:
 			device = 'Honeycomb'
+	elif 'webOS' in ua:
+		family = 'webOS'
+		if 'Pre' in ua:
+			device = 'Pre'
+		elif 'Pixi' in ua:
+			device = 'Pixi'
+		elif 'Veer' in ua:
+			device = 'Veer'
 	return family, device

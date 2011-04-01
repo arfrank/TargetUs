@@ -11,7 +11,7 @@
 from __future__ import absolute_import
 
 import uuid
-import logging
+
 from werkzeug import abort
 
 from tipfy import DEV_APPSERVER
@@ -488,9 +488,7 @@ def _user_required(handler):
         return handler.redirect(auth.login_url())
 
     if not auth.user:
-        logging.info('user not actually a user')
         return handler.redirect(auth.signup_url())
-    logging.info('got out of this one ok')
 
 
 def _user_required_if_authenticated(handler):
@@ -498,9 +496,7 @@ def _user_required_if_authenticated(handler):
     UserRequiredIfAuthenticatedMiddleware.
     """
     auth = handler.auth
-    logging.info('this is where we are')
     if auth.session and not auth.user:
-        logging.info('scotty we have a problem')
         return handler.redirect(auth.signup_url())
 
 

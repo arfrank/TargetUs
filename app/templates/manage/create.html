@@ -19,6 +19,7 @@
 		</li>
 		<br>
 		<h2>Choose redirect options</h2>
+		{#
 		<li>
 			<select id="redirector1" name="redirector1" class="redirect-dropdown">
 				<option class="cat" value="">Select an option</option>
@@ -82,6 +83,21 @@
 				<option value="androidphone">Android Phone</option>
 				<option value="androidtablet">Android Tablet</option>-->
 			</select> URL: <input id="redirect4" name="redirect4" value="">
+		</li>#}
+		<li>
+			{{ form_field(form.ios, class='large') }}
+			
+		</li>
+		<li>
+			{{ form_field(form.android, class='large') }}
+		</li>
+		<li>
+			{{ form_field(form.webOS, class='large') }}
+			
+		</li>
+		<li>
+			{{ form_field(form.blackberry, class='large') }}
+			
 		</li>
         <li>
 			{{ form_field(form.default, class='large') }}
