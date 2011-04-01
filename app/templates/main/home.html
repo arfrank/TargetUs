@@ -1,5 +1,15 @@
 {% extends "base/base.html" %}
 
 {% block body %}
-	asdfads
+	<ol>
+		{% if current_user or auth_session -%}
+			<li>Register an account</li>
+		{%else%}
+			<li><a href="{{url_for('auth/register')}}">Register an account</a></li>
+		{% endif %}
+		<li>{% if current_user or auth_session %}<a href="{{url_for('manage/create')}}">
+			
+		{% endif %}Create a redirection{% if current_user or auth_session -%}</a>{% endif %}</li>
+		<li>Redirect links based on target attributes</li>
+	</ol>
 {% endblock %}

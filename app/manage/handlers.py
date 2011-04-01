@@ -9,6 +9,8 @@ import logging
 from tipfyext import wtforms
 from tipfyext.wtforms import Form, fields, validators
 from google.appengine.ext import db
+import string
+import random
 REQUIRED = validators.required()
 
 class MainHandler(LoggedInHandler):
@@ -19,7 +21,7 @@ def ensure_hash(form,field):
 	#we're already in the right namespace
 	if field.data != '':
 		h = hashes.Hash.all().filter('hash =',field.data).get()
-		logging.info('Ensure Hash Unique: '+h)
+		logging.info('Ensure Hash Unique: '+str(h))
 		#uniqueness
 		if h:
 			raise wtforms.ValidationError('That hash has already been used.')
@@ -61,10 +63,22 @@ class CreateHandler(LoggedInHandler):
 		}
 		return self.render_response('manage/create.html', **context)
 
+	def get_unique_hash(self):
+		rands = string.digits+string.letters
+		h = ''.join([random.choice(rands) for i in xrange(5)])
+		ha = hashes.Hash.all().filter('hash = ',h).filter('deleted =',False).get()
+		while ha:
+			h = ''.join([random.choice(rands) for i in xrange(5)])
+			ha = hashes.Hash.all().filter('hash = ',h).filter('deleted =',False).get()
+		return h
+
 	def post(self, **kwargs):
 		if self.form.validate():
 			h = hashes.Hash()
-			h.hash = self.form.hash.data
+			if self.form.hash.data == '':
+				h.hash = self.get_unique_hash()
+			else:
+				h.hash = self.form.hash.data
 			h.desc = self.form.desc.data
 			h.user = self.auth.user
 			h.default = self.form.default.data

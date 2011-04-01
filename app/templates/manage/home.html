@@ -3,7 +3,12 @@
 {% block body %}
 	<h1>Manage your account</h1>
 	<ul>
-		<li><a href="{{url_for('manage/create')}}">Create a new redirector</a></li>
+		<li><a href="{{url_for('manage/create')}}">Create One</a></li>
 		<li><a href="{{url_for('manage/all')}}">View All</a></li>
 	</ul>
+	{#
+	<h2>Overall Account Statistics</h2>
+	<ul>
+		<li>Total Redirect: {{}}</li>
+	</ul>#}
 {% endblock %}

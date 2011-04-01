@@ -1,6 +1,8 @@
 #this should really be done via a dictionary, but quick then fast
+import logging
 def determine_device(headers):
 	ua = headers.get('User-Agent')
+	logging.info('Util: determine_device: UserAgent ='+ua)
 	family, device = 'default', 'default'
 	if 'iPhone' in ua:
 		family = 'iOS'
@@ -12,6 +14,7 @@ def determine_device(headers):
 		family = 'iOS'
 		device = 'iPad'
 	elif 'Android' in ua:
+		
 		family = 'Android'
 		if 'Android 2.1' in ua:
 			device = 'Eclair'

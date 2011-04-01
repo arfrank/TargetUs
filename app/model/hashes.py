@@ -9,6 +9,7 @@ from model.locations import Location
 
 from config import config
 
+import logging
 
 class Hash(BaseModel):
 	hash = db.StringProperty()
@@ -26,9 +27,12 @@ class Hash(BaseModel):
 	
 	
 	def get_location(self, family):
+		logging.info('Hashes: get_location: Family = '+str(family))
 		l = Location.all().filter('hash =',self).filter('deleted =',False).filter('family =',family.lower()).get()
 		if l:
+			logging.info('Hashes: get_location: Found based on family')
 			return l
+		logging.info('Hashes: get_location:  Falling back to default')
 		l = Location.all().filter('hash =',self).filter('deleted =',False).filter('family =','default').get()
 		return l
 

@@ -54,7 +54,9 @@
             <script src="/static/scripts/scripts.js"></script>
 			<script src="/static/scripts/custom.js?id=111"></script>
         {% endblock %}
-		<br>
-			<center>{{auth_session.namespace|e}} - NS</center>
+		{% if auth_session.namespace %}
+			<br>
+				<center>Namespace: {{auth_session.namespace|e}}</center>
+		{% endif %}
     </body>
 </html>

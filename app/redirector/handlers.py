@@ -50,24 +50,35 @@ class MainHandler(RequestHandler):
 
 		#SEE IF THAT HASH IS CACHED FOR THIS NAMESPACE SO I DONT NEED TO LOOKUP the hash key?
 		hashed = memcache.get(namespace+'-hash-'+str(hash))
-		
+		h_found = False
+		if hashed:
+			h_found = True
+			hashed = hashes.Hash.get_by_key_name(str(hashed))
+
 		if not hashed:
+			h_found = False
 			hashed = hashes.Hash.all().filter('hash =',hash).filter('deleted =',False).get()
 
 		#IF HASHED DOESNT EXIST
-		if False and not hashed:
+		if not hashed:
 			return self.abort(404)
 		#OTHERWISE LETS START PROCESSING
 		else:
-			device, family = devices.determine_device(self.request.headers)
+			family, device = devices.determine_device(self.request.headers)
+			logging.info('Redirector: Headers Following')
+			logging.info(self.request.headers)
+			logging.info('Redirector: Family = '+family)
 			logging.info('Redirector: Device = '+device)
-			logging.info('Redirector: Family = '+amily)
 
 			#SET THE HASH
-			memcache.set(namespace+'-hash-'+str(hash), True,time =  2629743)
+			if not h_found:
+				logging.info('Redirector: Not found in memcache, setting memcache key')
+				memcache.set(namespace+'-hash-'+str(hash), hashed.key().name(),time =  2629743)
 			
 			#redirector should set cookie
-			r = self.redirect(hashed.default)
+			loc = hashed.get_location(family)
+			logging.info('Redirector: Redirect found: Family = '+loc.family+' Loc='+loc.location)
+			r = self.redirect(loc.location)
 			
 			
 			#CHECK UNIQUENESS FROM COOKIES FOR STATISTICS

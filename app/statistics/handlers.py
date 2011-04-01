@@ -3,7 +3,7 @@ import logging
 from tipfy.appengine.sharded_counter import Counter
 from utils import devices
 from google.appengine.api import namespace_manager
-
+from model import hashes
 #LETS SET SOME NAMING PATTERNS!
 
 # THINGS WE CARE ABOUT
@@ -23,9 +23,11 @@ from google.appengine.api import namespace_manager
 # DEVICE
 # 
 class MainHandler(RequestHandler):
-	def namespace_statistics(self, namespace):
-		namespace = 'cnn'
-		counter_names = ['']
+	def namespace_statistics(self, namespace, keywords):
+		Counter(namespace).increment()
+		Counter(namespace+'-'+keywords['family']).increment()
+		Counter(namespace+'-'+keywords['device']).increment()
+		
 	
 	#THIS GOES IN THE FORM
 	#namespace-hash-index(-time?)
@@ -35,11 +37,16 @@ class MainHandler(RequestHandler):
 		Counter(namespace+'-'+hash).increment()
 		for name in counter_names:
 			Counter(namespace+'-'+hash+'-'+name).increment()
+		h = hashes.Hash.all().filter('hash =', hash).filter('deleted = ',False).get()
+		if h:
+			h.increment()
+			h.get_location(keywords['family']).increment()
 			
 		#lets do things for times
 		
 		
 	def post(self):
+		logging.info("Statistics: ")
 		namespace = self.request.form.get('Namespace')
 		hash = self.request.form.get('Hash')
 		keywords = {}
@@ -51,7 +58,7 @@ class MainHandler(RequestHandler):
 		namespace_manager.set_namespace(namespace)
 
 		self.hash_statistics(namespace,hash, keywords)
-		self.namespace_statistics(namespace)
+		self.namespace_statistics(namespace, keywords)
 		time = self.request.form.get('Time')
 		ua = self.request.form.get('User-Agent')
 		logging.info(time)
