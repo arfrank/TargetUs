@@ -81,6 +81,7 @@ html, body {
 
 .error{
 	background:#bb0000;
+	border:1px solid #ff0000;
 }
 .right{
 	float:right;

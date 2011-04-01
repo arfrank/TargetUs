@@ -20,40 +20,38 @@ class NamespaceMiddleware(object):
     def before_dispatch(self, handler):
 		#check that the namespace saved in the session matches the current namespace
 		auth = handler.auth
-		
 		namespace_manager.set_namespace('www')
-		logging.info('do we have a user?')
+		logging.info('Namespace Middleware: Setting namespace to WWW')
 		host = handler.request.headers.get('Host')
 		splits = host.lower().split('.')
 		if auth.session:
-			logging.info(auth.session)
-			logging.info('yes we have a session')
+			logging.info('Namespace Middleware: Yes session/user')
 			if auth.session and auth.session.get('namespace') and auth.session.get('namespace') != splits[0]:
-				logging.info(auth.session.get('namespace'))
+				logging.info('Namespace Middleware: Setting namespace to: '+auth.session.get('namespace'))
 				namespace_manager.set_namespace(auth.session.get('namespace'))
 				if len(splits) > 1:
 					return handler.redirect(auth.session['namespace']+'.'.join(splits[1:]))
 			else:
 				if 'appspot' in splits and len(splits)>=4:
-					logging.info('setting namespace to '+splits[0])
+					logging.info('Namespace Middleware: User and hitting appspot directly setting namespace to '+splits[0])
 					namespace_manager.set_namespace(splits[0])
 				elif len(splits) >= 3:
-					logging.info('setting namespace to '+splits[0])
+					logging.info('Namespace Middleware: User and hitting normal URL setting namespace to '+splits[0])
 					namespace_manager.set_namespace(splits[0])
 		else:
-			logging.info('no session')
+			logging.info('Namespace Middleware: No session/user')
 			if 'appspot' in splits:
-				logging.info('hitting appspot domain directly')
+				logging.info('Namespace Middleware: Hitting appspot domain directly')
 				if len(splits)>=4:
-					logging.info('setting namespace to '+splits[0])
+					logging.info('Namespace Middleware: Setting namespace to '+splits[0])
 					namespace_manager.set_namespace(splits[0])
 				else:
 					namespace_manager.set_namespace('www')
 			else:
-				logging.info('not hitting appspot directly')
+				logging.info('Namespace Middleware: Not hitting appspot directly')
 				if len(splits) >= 3:
-					logging.info('have 3 subdomains splits')
-					logging.info('setting namespace to '+splits[0])
+					logging.info('Namespace Middleware: Have 3 subdomains splits')
+					logging.info('Namespace Middleware: Setting namespace to '+splits[0])
 					namespace_manager.set_namespace(splits[0])
 			
 # ----- Handlers -----
