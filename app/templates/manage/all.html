@@ -4,7 +4,7 @@
 	<ul>
 		{% if hashes.count %}
 			{% for h in hashes %}
-				<li><a href="/manage/edit/{{h.hash}}">{{h.hash}}</a></li>
+				<li><a href="/manage/view/{{h.hash}}">{{h.hash}}</a> - {{h.hits}} hits</li>
 			{% endfor %}
 		{% else%}
 		<p>
