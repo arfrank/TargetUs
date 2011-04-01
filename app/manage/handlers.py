@@ -19,7 +19,7 @@ def ensure_hash(form,field):
 	#we're already in the right namespace
 	if field.data != '':
 		h = hashes.Hash.all().filter('hash =',field.data).get()
-		logging.info(h)
+		logging.info('Ensure Hash Unique: '+h)
 		#uniqueness
 		if h:
 			raise wtforms.ValidationError('That hash has already been used.')
@@ -80,9 +80,9 @@ class CreateHandler(LoggedInHandler):
 			if self.form.blackberry.data:
 				locs['blackberry'] = self.form.blackberry.data
 			locs['default'] = self.form.default.data
-			h.alter_locations(locs)
+			h.alter_locations(**locs)
 
-			return self.redirect('/manage/edit/'+h.hash)
+			return self.redirect('/manage/view/'+h.hash)
 
 		self.messages.append(('Authentication failed. Please try again.',
 			'error'))
@@ -122,9 +122,10 @@ class AllHandler(LoggedInHandler):
 
 class ViewHandler(LoggedInHandler):
 	def get(self,hash = None, **kwargs):
+		logging.info('ViewHandler: hash = '+hash)
 		context = {
 			'section':'View',
-			'hash': hashes.Hash.all().filter('deleted = ',False).filter('hash = ',hash),
+			'hash': hashes.Hash.all().filter('deleted = ',False).filter('hash = ',hash).get(),
 		}
 		return self.render_response('manage/view.html', **context)
 

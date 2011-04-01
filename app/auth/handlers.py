@@ -60,7 +60,7 @@ class LoginHandler(BaseHandler):
 	def get(self, **kwargs):
 		host = self.request.host.lower()
 		ns = host.split('.')[0]
-		logging.info(ns)
+		logging.info('Login Handler: Namespace = '+ns)
 		
 		if ns == 'www' or ns == self.app.get_config('site','appspot_id'):
 			return self.render_response('auth/redirect.html')
@@ -123,7 +123,7 @@ class RegisterHandler(BaseHandler):
 			return self.redirect(redirect_url)
 		
 		ns = namespace_manager.get_namespace()
-		logging.info(ns)
+		logging.info('Login Handler: Namespace = '+ns)
 		if ns != 'www':
 			return self.redirect(self.app.get_config('site','main_url')+'auth/register')
 
@@ -166,7 +166,6 @@ class RegisterHandler(BaseHandler):
 				self.auth.login_with_auth_id(user.auth_id, True)
 				self.session.add_flash('You are now registered. Welcome!',
 					'success', '_messages')
-				logging.info(redirect_url)
 				redirect_url = 'http://'+ns.name+'.target-us.appspot.com/manage'
 				return self.redirect(redirect_url)
 			else:
