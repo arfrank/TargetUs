@@ -2,12 +2,6 @@
 """App configuration."""
 config = {}
 
-config['site'] = {
-'appspot_id':'target-us',
-'main_url':'http://target-us.appspot.com/',
-'title': 'TargetUs',
-'subdomain':'target-us.appspot.com/'
-}
 # Configurations for the 'tipfy' module.
 config['tipfy'] = {
     'auth_store_class': 'tipfy.auth.MultiAuthStore',
@@ -41,4 +35,10 @@ config['tipfyext.jinja2'] = {
             'jinja2.ext.with_'
         ],
     },
+}
+config['site'] = {
+'appspot_id':'target-us',
+'main_url':'http://target-us.appspot.com/',
+'title': 'TargetUs',
+'subdomain':'target-us.appspot.com/',
 }

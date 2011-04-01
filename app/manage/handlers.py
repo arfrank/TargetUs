@@ -70,42 +70,18 @@ class CreateHandler(LoggedInHandler):
 			h.default = self.form.default.data
 			h.put()
 
-			tp = []
+			locs = {}
 			if self.form.ios.data:
-				i = locations.Location()
-				i.hash = h
-				i.family = 'ios'
-				i.location = self.form.ios.data
-				tp.append(i)
+				locs['ios'] = self.form.ios.data
 			if self.form.android.data:
-				a = locations.Location()
-				a.hash = h
-				a.family = 'android'
-				a.location = self.form.android.data
-				tp.append(a)
+				locs['android'] = self.form.android.data
 			if self.form.webOS.data:
-				w = locations.Location()
-				w.hash = h
-				w.family = 'webos'
-				w.location = self.form.webos.data
-				tp.append(w)
+				locs['webos'] = self.form.webOS.data
 			if self.form.blackberry.data:
-				b = locations.Location()
-				b.hash = h
-				b.family = 'blackberry'
-				b.location = self.form.blackberry.data
-				tp.append(b)
+				locs['blackberry'] = self.form.blackberry.data
+			locs['default'] = self.form.default.data
+			h.alter_locations(locs)
 
-			d = locations.Location()
-			d.hash = h
-			d.family = 'default'
-			d.device = 'default'
-			d.version = 'default'
-			d.location = h.default
-			tp.append(d)
-
-			db.put(tp)
-			
 			return self.redirect('/manage/edit/'+h.hash)
 
 		self.messages.append(('Authentication failed. Please try again.',
@@ -148,9 +124,9 @@ class ViewHandler(LoggedInHandler):
 	def get(self,hash = None, **kwargs):
 		context = {
 			'section':'View',
-			'hashes': hashes.Hash.all().filter('deleted = ',False),
+			'hash': hashes.Hash.all().filter('deleted = ',False).filter('hash = ',hash),
 		}
-		return self.render_response('manage/all.html', **context)
+		return self.render_response('manage/view.html', **context)
 
 
 

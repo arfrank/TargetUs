@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+	<h1>View</h1>
+	<p class="right">
+		<img src="{{hash.get_qr_url}}" alt="{{hash.desc|e}}">
+	</p>
+	<p>
+		URL: {{hash.get_url}}
+	</p>
+	<p>
+		Hits: {{hash.hits}}
+	</p>
+	<P>
+		Description: {{hash.desc|e}}
+	</p>
+	<h2>Redirection Links</h2>
+	{% for l in {{hash.locations}}  %}
+		<p>
+			{{l.family}}: {{l.location}}
+		</p>
+	{% endfor %}
+	<div class="clearer">
+		
+	</div>
+{% endblock %}
